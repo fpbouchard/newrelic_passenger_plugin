@@ -66,6 +66,7 @@ class Status
     processes = Hash.new(0)
     doc.xpath('//process').each_with_index do |x, index|
       processes[(index + 1).to_s] += x.xpath('./real_memory').text.to_i
+      puts "idx: #{index + 1}, KB: #{processes[(index + 1).to_s]}"
     end
     processes
   end
