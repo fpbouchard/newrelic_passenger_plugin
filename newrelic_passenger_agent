@@ -14,8 +14,8 @@ module PassengerAgent
 
   class Agent < NewRelic::Plugin::Agent::Base
 
-    agent_guid "com.Gazelle.passenger"
-    agent_version "1.0.1"
+    agent_guid "com.petalmd.passenger"
+    agent_version "1.0.0"
     agent_config_options :passenger_status, :passenger_free
     # Name of instance that will display in New Relic
     agent_human_labels("Passenger") { "#{`hostname`}" }
@@ -76,7 +76,7 @@ module PassengerAgent
     end
 
   # Register this agent with the component.
-  NewRelic::Plugin::Setup.install_agent :passenger, PassengerAgent
+  NewRelic::Plugin::Setup.install_agent :Passenger, PassengerAgent
 
   # Launch the agent; this never returns.
   NewRelic::Plugin::Run.setup_and_run

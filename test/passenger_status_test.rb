@@ -30,7 +30,7 @@ class PassengerStatusTest < Test::Unit::TestCase
   end
 
   test "memory by app parsed correctly" do
-    assert_equal 55620, @status_parser.process_memory['Passenger RackApp: testapp1']
+    assert_equal 55620, @status_parser.process_memory['23882']
   end
 
   test "time since last used parsed correctly" do
