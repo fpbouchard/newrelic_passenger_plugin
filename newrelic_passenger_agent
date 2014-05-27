@@ -52,7 +52,7 @@ module PassengerAgent
 
       # Memory usage by app
       @status.process_memory.each do |app, memory_usage|
-        report_metric "passenger/memory/detail/#{app}", "MB", memory_usage
+        report_metric "passenger/memory/detail/#{app}", "megabytes", memory_usage
       end
 
       # Time since last used, by passenger worker
