@@ -76,7 +76,7 @@ module PassengerAgent
     end
 
   # Register this agent with the component.
-  NewRelic::Plugin::Setup.install_agent :Passenger, PassengerAgent
+  NewRelic::Plugin::Setup.install_agent :passenger, PassengerAgent
 
   # Launch the agent; this never returns.
   NewRelic::Plugin::Run.setup_and_run

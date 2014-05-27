@@ -64,8 +64,8 @@ class Status
 
   def parse_app_memory(doc)
     processes = Hash.new(0)
-    doc.xpath('//process').each do |x|
-      processes[x.xpath('./pid').text] += x.xpath('./real_memory').text.to_i
+    doc.xpath('//process').each_with_index do |x, index|
+      processes[(index + 1).to_s] += x.xpath('./real_memory').text.to_i
     end
     processes
   end
@@ -75,7 +75,7 @@ class Status
     doc.xpath('//process').each_with_index do |x, index|
       unix_stamp = (x.xpath('./last_used').text.to_i / 1000000)
       elapsed = Time.now.to_i - unix_stamp
-      processes[x.xpath('./pid').text] = elapsed
+      processes[(index + 1).to_s] = elapsed
     end
     processes
   end
