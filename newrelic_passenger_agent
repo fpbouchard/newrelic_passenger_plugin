@@ -15,7 +15,7 @@ module PassengerAgent
 
     agent_guid "com.petalmd.passenger"
     agent_version "1.0.0"
-    agent_config_options :passenger_status, :passenger_free
+    agent_config_options :passenger_status
     # Name of instance that will display in New Relic
     agent_human_labels("Passenger") { "#{`hostname`}" }
 
@@ -26,14 +26,22 @@ module PassengerAgent
       @status = Status.new(run_command(passenger_status))
 
       # Report data from passegner-status command
-      report_metric "passenger/processes/max", "Processes", @status.max
-      report_metric "passenger/processes/running", "Processes", @status.current
-      report_metric "passenger/queue/waiting", "Requests", @status.queue
-      report_metric "passenger/totals/sessions", "Sessions", @status.sessions
-      report_metric "passenger/totals/cpu", "CPU%", @status.cpu
+      report_metric "passenger/processes/max", "Processes", @status.processes_max
+      report_metric "passenger/processes/running", "Processes", @status.processes_current
 
-      # Memory usage by app
-      @status.process_memory.each do |app, memory_usage|
+      report_metric "passenger/requests/waiting", "Requests", @status.queue
+      report_metric "passenger/requests/total", "Requests", @status.requests_total
+      @status.request_per_host.each do |app, requests|
+        report_metric "passenger/requests/detail/#{app}", "Requests", requests
+      end
+
+      report_metric "passenger/cpu/total", "CPU%", @status.cpu_total
+      @status.cpu_per_host.each do |app, cpu_usage|
+        report_metric "passenger/cpu/detail/#{app}", "CPU%", cpu_usage
+      end
+
+      report_metric "passenger/memory/total", "MB", @status.app_memory_total
+      @status.app_memory_per_process.each do |app, memory_usage|
         report_metric "passenger/memory/detail/#{app}", "MB", memory_usage
       end
 

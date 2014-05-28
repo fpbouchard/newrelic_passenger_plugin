@@ -19,4 +19,3 @@ agents:
   passenger:
     # Command, or path to commands
     passenger_status: 'passenger-status --show=xml'
-    passenger_free: 'free -m'
