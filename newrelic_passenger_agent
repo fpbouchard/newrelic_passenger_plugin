@@ -7,7 +7,6 @@ require "bundler/setup"
 require "newrelic_plugin"
 require "nokogiri"
 require File.join(File.dirname(__FILE__), 'lib/status_parser')
-require File.join(File.dirname(__FILE__), 'lib/free_memory')
 require File.join(File.dirname(__FILE__), 'test/test_helper')
 
 module PassengerAgent
@@ -24,24 +23,7 @@ module PassengerAgent
     def poll_cycle
 
       #initialize
-      @free_memory = FreeMemory.new(run_command(passenger_free))
       @status = Status.new(run_command(passenger_status))
-
-      # Report Memory usage data from 'free -m' command
-      report_metric "passenger/totals/memory", "MB", @free_memory.total_memory
-      report_metric "passenger/memory/all/used", "MB", @free_memory.used_memory
-      report_metric "passenger/memory/all/free", "MB", @free_memory.free_memory
-      report_metric "passenger/memory/all/shared", "MB", @free_memory.shared_memory
-      report_metric "passenger/memory/all/other/cached", "MB", @free_memory.cached
-      report_metric "passenger/memory/app/used", "MB", @free_memory.app_used
-      report_metric "passenger/memory/app/free", "MB", @free_memory.app_free
-      report_metric "passenger/totals/swap", "MB", @free_memory.swap_total
-      report_metric "passenger/swap/used", "MB", @free_memory.swap_used
-      report_metric "passenger/swap/free", "MB", @free_memory.swap_free
-
-      # Calculated Metrics
-      percent_free = (@free_memory.free_memory.to_f / (@free_memory.used_memory.to_f + @free_memory.free_memory.to_f)) * 100
-      report_metric "passenger/calculated/percent_free", "%", percent_free
 
       # Report data from passegner-status command
       report_metric "passenger/processes/max", "Processes", @status.max

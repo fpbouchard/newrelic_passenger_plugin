@@ -14,7 +14,6 @@ class Status
       parse_app_memory(doc),
       parse_last_used(doc)
     ]
-    puts @status_result
   end
 
   def max
@@ -66,7 +65,7 @@ class Status
   def parse_app_memory(doc)
     processes = Hash.new(0)
     doc.xpath('//process').each_with_index do |x, index|
-      processes[(index + 1).to_s] += x.xpath('./real_memory').text.to_i
+      processes[(index + 1).to_s] += x.xpath('./real_memory').text.to_i / 1024
     end
     processes
   end
