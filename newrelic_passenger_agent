@@ -30,7 +30,7 @@ module PassengerAgent
       report_metric "passenger/requests/waiting", "Requests", @status.request_queue_size
       report_metric "passenger/requests/total", "Requests", @status.requests_total
       @status.requests_per_process.each do |pid, requests|
-        report_metric "passenger/requests/detail/#{app}", "Requests", requests
+        report_metric "passenger/requests/detail/#{pid}", "Requests", requests
       end
 
       report_metric "passenger/cpu/total", "CPU%", @status.cpu_total
