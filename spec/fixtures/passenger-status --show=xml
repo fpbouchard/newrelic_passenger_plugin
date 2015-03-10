@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="iso8859-1"?>
 <info version="2">
-   <process_count>6</process_count>
+   <process_count>3</process_count>
    <max>6</max>
-   <capacity_used>6</capacity_used>
+   <capacity_used>3</capacity_used>
    <get_wait_list_size>3</get_wait_list_size>
    <get_wait_list/>
    <supergroups>

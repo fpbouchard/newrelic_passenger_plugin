@@ -5,9 +5,7 @@
 require "rubygems"
 require "bundler/setup"
 require "newrelic_plugin"
-require "nokogiri"
 require File.join(File.dirname(__FILE__), 'lib/status_parser')
-require File.join(File.dirname(__FILE__), 'test/test_helper')
 
 module PassengerAgent
 
@@ -29,27 +27,29 @@ module PassengerAgent
       report_metric "passenger/processes/max", "Processes", @status.processes_max
       report_metric "passenger/processes/running", "Processes", @status.processes_current
 
-      report_metric "passenger/requests/waiting", "Requests", @status.queue
+      report_metric "passenger/requests/waiting", "Requests", @status.request_queue_size
       report_metric "passenger/requests/total", "Requests", @status.requests_total
-      @status.request_per_host.each do |app, requests|
+      @status.requests_per_process.each do |pid, requests|
         report_metric "passenger/requests/detail/#{app}", "Requests", requests
       end
 
       report_metric "passenger/cpu/total", "CPU%", @status.cpu_total
-      @status.cpu_per_host.each do |app, cpu_usage|
-        report_metric "passenger/cpu/detail/#{app}", "CPU%", cpu_usage
+      @status.cpu_per_process.each do |pid, cpu_usage|
+        report_metric "passenger/cpu/detail/#{pid}", "CPU%", cpu_usage
       end
 
-      report_metric "passenger/memory/total", "MB", @status.app_memory_total
-      @status.app_memory_per_process.each do |app, memory_usage|
-        report_metric "passenger/memory/detail/#{app}", "MB", memory_usage
+      report_metric "passenger/memory/total", "MB", @status.memory_total
+      @status.memory_per_process.each do |pid, memory_usage|
+        report_metric "passenger/memory/detail/#{pid}", "MB", memory_usage
       end
 
-      # Time since last used, by passenger worker
-      @status.last_used_time.each do |worker_num, time_elapsed|
-        report_metric "passenger/workers/time_since_last_used/#{worker_num}", "s", time_elapsed
+      @status.last_used_time_per_process.each do |pid, time_elapsed|
+        report_metric "passenger/processes/time_since_last_used/#{pid}", "s", time_elapsed
       end
 
+      @status.uptime_per_process.each do |pid, uptime|
+        report_metric "passenger/processes/uptime/#{pid}", "s", uptime
+      end
     end
 
     private
