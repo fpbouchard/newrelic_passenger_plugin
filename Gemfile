@@ -5,4 +5,3 @@ gem "nokogiri"
 gem 'rake'
 gem 'rspec', '~> 3.0'
 gem 'timecop'
-gem 'passenger-enterprise-server'
