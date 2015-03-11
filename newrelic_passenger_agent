@@ -24,31 +24,30 @@ module PassengerAgent
       @status = Status.new(run_command(passenger_status))
 
       # Report data from passegner-status command
-      report_metric "passenger/processes/max", "Processes", @status.processes_max
-      report_metric "passenger/processes/running", "Processes", @status.processes_current
+      report_metric "passenger/processes/running", "process|slots", @status.processes_current, count: @status.processes_max
 
-      report_metric "passenger/requests/waiting", "Requests", @status.request_queue_size
-      report_metric "passenger/requests/total", "Requests", @status.requests_total
-      @status.requests_per_process.each do |pid, requests|
-        report_metric "passenger/requests/detail/#{pid}", "Requests", requests
+      report_metric "passenger/requests/waiting", "requests", @status.request_queue_size
+      report_metric "passenger/requests/total", "requests", @status.requests_total
+      @status.requests_per_worker.each do |idx, requests|
+        report_metric "passenger/workers/requests/#{idx}", "requests", requests
       end
 
-      report_metric "passenger/cpu/total", "CPU%", @status.cpu_total
-      @status.cpu_per_process.each do |pid, cpu_usage|
-        report_metric "passenger/cpu/detail/#{pid}", "CPU%", cpu_usage
+      report_metric "passenger/cpu/total", "CPU", "#{@status.cpu_total}%"
+      @status.cpu_per_worker.each do |idx, cpu_usage|
+        report_metric "passenger/workers/cpu/#{idx}", "CPU", "#{cpu_usage}%"
       end
 
-      report_metric "passenger/memory/total", "MB", @status.memory_total
-      @status.memory_per_process.each do |pid, memory_usage|
-        report_metric "passenger/memory/detail/#{pid}", "MB", memory_usage
+      report_metric "passenger/memory/total", "bytes", @status.memory_total
+      @status.memory_per_worker.each do |idx, memory_usage|
+        report_metric "passenger/workers/memory/#{idx}", "bytes", memory_usage
       end
 
-      @status.last_used_time_per_process.each do |pid, time_elapsed|
-        report_metric "passenger/processes/time_since_last_used/#{pid}", "s", time_elapsed
+      @status.last_used_time_per_worker.each do |idx, time_elapsed|
+        report_metric "passenger/workers/time_since_last_used/#{idx}", "seconds", time_elapsed
       end
 
-      @status.uptime_per_process.each do |pid, uptime|
-        report_metric "passenger/processes/uptime/#{pid}", "s", uptime
+      @status.uptime_per_worker.each do |idx, uptime|
+        report_metric "passenger/workers/uptime/#{idx}", "seconds", uptime
       end
     end
 
