@@ -24,7 +24,8 @@ module PassengerAgent
       @status = Status.new(run_command(passenger_status))
 
       # Report data from passegner-status command
-      report_metric "passenger/processes/running", "process|slots", @status.processes_current, count: @status.processes_max
+      report_metric "passenger/processes/running", "processes", @status.processes_current
+      report_metric "passenger/processes/max", "processes", @status.processes_max
 
       report_metric "passenger/requests/waiting", "requests", @status.request_queue_size
       report_metric "passenger/requests/total", "requests", @status.requests_total
