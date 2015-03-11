@@ -33,9 +33,9 @@ module PassengerAgent
         report_metric "passenger/workers/requests/#{idx}", "requests", requests
       end
 
-      report_metric "passenger/cpu/total", "CPU", "#{@status.cpu_total}%"
+      report_metric "passenger/cpu/total", "percentage", @status.cpu_total
       @status.cpu_per_worker.each do |idx, cpu_usage|
-        report_metric "passenger/workers/cpu/#{idx}", "CPU", "#{cpu_usage}%"
+        report_metric "passenger/workers/cpu/#{idx}", "percentage", cpu_usage
       end
 
       report_metric "passenger/memory/total", "bytes", @status.memory_total
